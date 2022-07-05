@@ -1,25 +1,24 @@
+from twitchio.ext import commands
 import credentials
-from selenium import webdriver
-from time import sleep
-import tkinter as tk
-from sys import exit
-import chromedriver_binary
 
-options = webdriver.ChromeOptions()
-options.add_experimental_option("detach", True)
-twitchBrowser = webdriver.Chrome(options=options)
-#gmailBrowser = webdriver.Chrome(chrome_options=options)
+class Bot(commands.Bot):
+    def __init__(self):
+        super().__init__(token=credentials.oauthToken, prefix='!', initial_channels=credentials.twitchChannel)
 
+    async def event_ready(self):
+        print(f'Logged in as | {self.nick}')
+        print(f'User id is | {self.user_id}')
 
-def closeProgram():
-    twitchBrowser.quit()
-    exit()
+    async def event_message(self, message):
+        if message.echo:
+            return
+        
+        print(message.content)
+        await self.handle_commands(message)
 
-def signin():
-    twitchBrowser.get('https://twitch.tv/sergeantlefthand')
-    sleep(1)
+    @commands.command()
+    async def help(self, ctx: commands.Context):
+        await ctx.send(f'Type ![command]\nCommands:\nhelp')
 
-
-
-
-
+bot = Bot()
+bot.run()
