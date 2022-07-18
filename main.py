@@ -2,6 +2,7 @@ from twitchio.ext import commands
 import credentials
 import random
 import mushroom
+import tkinter as tk
 
 class Bot(commands.Bot):
     def __init__(self):
@@ -20,7 +21,7 @@ class Bot(commands.Bot):
 
     @commands.command()
     async def help(self, ctx: commands.Context):
-        await ctx.send(f'Type ![command]\nCommands: aladeen, bwl, charity, coinflip, discord, help, josh, mushroom, steam')
+        await ctx.send(f'Type ![command]\nCommands: aladeen, bwl, charity, coinflip, discord, domserum, help, josh, mushroom, russianroulette, steam')
 
     @commands.command()
     async def aladeen(self, ctx: commands.Context):
@@ -46,6 +47,10 @@ class Bot(commands.Bot):
     @commands.command()
     async def discord(self, ctx: commands.Context):
         await ctx.send(f'https://discord.gg/5E79jj9uSh')
+    
+    @commands.command()
+    async def domserum(self, ctx: commands.Context):
+        await ctx.send(f'🥛🥛🥛🥛🥛')
 
     @commands.command()
     async def josh(self, ctx: commands.Context):
@@ -56,8 +61,56 @@ class Bot(commands.Bot):
         await ctx.send(f'Your random mushroom is: ' + mushroom.getMushroom())
 
     @commands.command()
+    async def russianroulette(self, ctx: commands.Context):
+        userRoll = random.randint(1,6)
+        bullet = random.randint(1,6)
+        if userRoll != bullet:
+            await ctx.send(f'🔫❌ you got lucky this time {ctx.author.name}')
+        elif userRoll == bullet:
+            await ctx.send(f'🔫💀 nice rng 5head {ctx.author.name}')
+            await ctx.send(f'/timeout @{ctx.author.name} 1s russian roulette')
+
+    @commands.command()
     async def steam(self, ctx: commands.Context):
         await ctx.send(f'https://steamcommunity.com/id/SergeantLeftHand/')
-        
-bot = Bot()
-bot.run()
+
+def startBot():
+    if inputText.get() == credentials.botPassword:
+        labelText.set("Correct password, bot is starting...")
+        inputText.pack_forget()
+        startButton.pack_forget()
+
+        stopButton = tk.Button(frame, text="Stop Bot", command = stopBot)
+        stopButton.configure(bg='#6c4a7e',fg='#ecebe1')
+        stopButton.pack(pady=6,padx=6)
+
+        bot = Bot()
+        bot.run()
+    else:
+        labelText.set("Incorrect password, try again")
+
+def stopBot():
+    exit()
+
+frame = tk.Tk()
+frame.title("BonksterzBot")
+frame.configure(bg='#383838')
+frame.resizable(False,False)
+
+labelText = tk.StringVar()
+labelText.set("What's the secret password?")
+
+inputLabel = tk.Label(frame, textvariable= labelText)
+inputLabel.configure(bg='#383838',fg='#ecebe1')
+inputLabel.pack(pady=3)
+
+inputText = tk.Entry(frame, show="\u2022", width=17)
+inputText.configure(bg='#c6b3d0',fg='#383838')
+inputText.pack(pady=3)
+
+startButton = tk.Button(frame,text="Start Bot", command = startBot)
+startButton.configure(bg='#6c4a7e', fg='#ecebe1')
+startButton.pack(pady=6,padx=6)
+
+frame.protocol("WM_DELETE_WINDOW", stopBot)
+frame.mainloop()
