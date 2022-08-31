@@ -38,11 +38,14 @@ class Bot(commands.Bot):
     @commands.command()
     async def coinflip(self, ctx: commands.Context):
         coin = random.randint(0,1)
-        match coin:
-            case 0:
+        if (coin == 0):
+            await ctx.send(f'Heads!')
+            '''case 0:
                 await ctx.send(f'Heads!')
             case 1:
-                await ctx.send(f'Tails!')
+                await ctx.send(f'Tails!')'''
+        if (coin == 1):
+            await ctx.send(f'Tails!')
     
     @commands.command()
     async def discord(self, ctx: commands.Context):
